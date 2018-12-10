@@ -28,6 +28,7 @@
         <Label text="Uzorak:"/>
         <TextField fx:id="traziStringField" GridPane.columnIndex="1"/>
         <Button fx:id="traziBtn" onAction="#pokreniPretragu" mnemonicParsing="false" text="Traži" GridPane.columnIndex="2"/>
+        <Button fx:id="prekiniBtn" onAction="#prekiniPretragu" mnemonicParsing="false" text="Prekini" GridPane.columnIndex="3"/>
         <ListView fx:id="listaDatotekaField" prefHeight="200.0" prefWidth="309.0" GridPane.columnIndex="0" GridPane.rowIndex="1"
                   GridPane.columnSpan="4"/>
     </children>

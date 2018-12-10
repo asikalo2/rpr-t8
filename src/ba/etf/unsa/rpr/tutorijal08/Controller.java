@@ -30,6 +30,7 @@ public class Controller {
     public ListView listaDatotekaField;
     public SimpleListProperty<String> listaDatoteka;
     public Button traziBtn;
+    public Button prekiniBtn;
     private List<String> rezultat;
 
     private Thread backgroundWorker;
@@ -46,6 +47,7 @@ public class Controller {
         traziStringField.textProperty().bindBidirectional(traziString);
         listaDatotekaField.itemsProperty().bindBidirectional(listaDatoteka);
         listaDatoteka.set(FXCollections.observableArrayList(rezultat));
+        prekiniBtn.setDisable(true);
     }
 
 
@@ -56,6 +58,7 @@ public class Controller {
                 dobaviSveDatoteke(new File(System.getProperty("user.home")));
                 traziBtn.setDisable(false);
                 traziStringField.setDisable(false);
+                prekiniBtn.setDisable(true);
             }
         };
         Platform.runLater(new Runnable() {
@@ -63,6 +66,7 @@ public class Controller {
             public void run() {
                 traziBtn.setDisable(true);
                 traziStringField.setDisable(true);
+                prekiniBtn.setDisable(false);
             }
         });
         backgroundWorker = new Thread(task);
@@ -96,5 +100,8 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void prekiniPretragu(ActionEvent actionEvent) {
     }
 }
