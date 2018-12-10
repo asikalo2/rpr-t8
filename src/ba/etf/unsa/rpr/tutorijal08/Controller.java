@@ -1,5 +1,6 @@
 package ba.etf.unsa.rpr.tutorijal08;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +31,9 @@ public class Controller {
     public SimpleListProperty<String> listaDatoteka;
     public Button traziBtn;
     private List<String> rezultat;
+
+    private Thread backgroundWorker;
+
 
     public Controller() {
         traziString = new SimpleStringProperty("");
@@ -44,5 +50,45 @@ public class Controller {
 
 
     public void pokreniPretragu(ActionEvent actionEvent) {
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                dobaviSveDatoteke(new File(System.getProperty("user.home")));
+                traziBtn.setDisable(false);
+                traziStringField.setDisable(false);
+            }
+        };
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                traziBtn.setDisable(true);
+                traziStringField.setDisable(true);
+            }
+        });
+        backgroundWorker = new Thread(task);
+        backgroundWorker.setDaemon(true);
+        backgroundWorker.start();
+    }
+
+    public void dobaviSveDatoteke(File dir) {
+        // Nadjeno na netu
+        try {
+
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    dobaviSveDatoteke(file);
+                } else {
+                    if (file.getCanonicalPath().toLowerCase().contains(traziStringField.textProperty().getValue()
+                            .toLowerCase())) {
+                        //System.out.println(file.getCanonicalPath());
+                        String res = file.getCanonicalPath();
+                        rezultat.add(file.getCanonicalPath());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
