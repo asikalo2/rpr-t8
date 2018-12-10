@@ -84,6 +84,12 @@ public class Controller {
                         //System.out.println(file.getCanonicalPath());
                         String res = file.getCanonicalPath();
                         rezultat.add(file.getCanonicalPath());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                listaDatotekaField.getItems().add(res);
+                            }
+                        });
                     }
                 }
             }
