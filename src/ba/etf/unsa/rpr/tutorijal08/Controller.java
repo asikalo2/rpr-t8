@@ -103,5 +103,7 @@ public class Controller {
     }
 
     public void prekiniPretragu(ActionEvent actionEvent) {
+        if (backgroundWorker.isAlive())
+            backgroundWorker.interrupt();
     }
 }
