@@ -52,7 +52,7 @@ public class NovaForma {
 
         dodajListenere();
     }
-    
+
     private void dodajListenere() {
         brojField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -64,7 +64,9 @@ public class NovaForma {
                         @Override
                         public void run() {
                             try {
-                                if (!th.isAlive() && validator.getValidan()) {
+                                th.join();
+                                if (validator.getValidan()) {
+                                    System.out.println("test 1");
                                     brojField.getStyleClass().removeAll("poljeNijeIspravno");
                                     brojField.getStyleClass().add("poljeIspravno");
                                 } else {
@@ -77,5 +79,6 @@ public class NovaForma {
                 }
             }
         });
+
     }
 }
