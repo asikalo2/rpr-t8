@@ -52,28 +52,7 @@ public class NovaForma {
 
         dodajListenere();
     }
-
-    private boolean provjeriPostanskiBroj(String broj) throws Exception {
-        // nadjeno na netu
-        URL link = new URL("http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=" + broj);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(link.openStream())
-        );
-        String sadrzaj = "";
-        String line;
-        while ((line = in.readLine()) != null)
-            sadrzaj += line;
-
-        System.out.println(sadrzaj);
-        in.close();
-
-        if (sadrzaj.equals("OK")) {
-            System.out.println("vraca true");
-            return true;
-        }
-        return false;
-    }
-
+    
     private void dodajListenere() {
         brojField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
