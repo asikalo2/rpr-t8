@@ -4,6 +4,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+
 public class NovaForma {
     public TextField imeField;
     public TextField prezimeField;
@@ -24,6 +28,11 @@ public class NovaForma {
         adresa = new SimpleStringProperty("");
         grad = new SimpleStringProperty("");
         postanskiBroj = new SimpleStringProperty("");
+        try {
+            provjeriPostanskiBroj("71000");
+            provjeriPostanskiBroj("71001");
+        }
+        catch(Exception e) {}
     }
 
     @FXML
@@ -33,6 +42,23 @@ public class NovaForma {
         adresaField.textProperty().bindBidirectional(adresa);
         gradField.textProperty().bindBidirectional(grad);
         brojField.textProperty().bindBidirectional(postanskiBroj);
+    }
+
+    private boolean provjeriPostanskiBroj(String broj) throws Exception {
+        // nadjeno na netu
+        URL link = new URL("http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=" + broj);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(link.openStream())
+        );
+        String sadrzaj = "";
+        String line;
+        while ((line = in.readLine()) != null)
+            sadrzaj += line;
+
+        System.out.println(sadrzaj);
+        in.close();
+
+        return false;
     }
 
 
