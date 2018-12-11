@@ -25,7 +25,6 @@ public class NovaForma {
     public SimpleStringProperty postanskiBroj;
 
     PostanskiBrojValidator validator;
-    Thread th;
 
     public NovaForma() {
         ime = new SimpleStringProperty("");
@@ -34,12 +33,6 @@ public class NovaForma {
         grad = new SimpleStringProperty("");
         postanskiBroj = new SimpleStringProperty("");
         validator = new PostanskiBrojValidator("");
-        th = new Thread(validator);
-
-        th.setDaemon(true);
-        th.setName("validator");
-
-
     }
 
     @FXML
@@ -59,7 +52,11 @@ public class NovaForma {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !t1) {
                     validator.setBroj(brojField.getText());
+                    Thread th = new Thread(validator);
+                    th.setDaemon(true);
+                    th.setName("validator");
                     th.start();
+
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
