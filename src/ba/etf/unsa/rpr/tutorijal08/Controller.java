@@ -62,7 +62,7 @@ public class Controller {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.initStyle(StageStyle.DECORATED);
                     stage.setTitle("Nova forma");
-                    stage.setScene(new Scene(root1));
+                    stage.setScene(new Scene(root1, 400, 300));
                     stage.show();
                 }
                 catch (IOException e) {
