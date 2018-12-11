@@ -22,17 +22,12 @@ public class NovaForma {
     public SimpleStringProperty postanskiBroj;
 
 
-    public NovaForma () {
+    public NovaForma() {
         ime = new SimpleStringProperty("");
         prezime = new SimpleStringProperty("");
         adresa = new SimpleStringProperty("");
         grad = new SimpleStringProperty("");
         postanskiBroj = new SimpleStringProperty("");
-        try {
-            provjeriPostanskiBroj("71000");
-            provjeriPostanskiBroj("71001");
-        }
-        catch(Exception e) {}
     }
 
     @FXML
@@ -61,5 +56,21 @@ public class NovaForma {
         return false;
     }
 
+    private void dodajListenere() {
+        brojField.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!brojField.isFocused()) {
+                try {
+                    if (provjeriPostanskiBroj(brojField.getText())) {
+                        brojField.getStyleClass().removeAll("poljeNijeIspravno");
+                        brojField.getStyleClass().add("poljeIspravno");
+                    } else {
+                        brojField.getStyleClass().removeAll("poljeIspravno");
+                        brojField.getStyleClass().add("poljeNijeIspravno");
+                    }
+                } catch (Exception e) {
+                }
+            }
 
+        });
+    }
 }
