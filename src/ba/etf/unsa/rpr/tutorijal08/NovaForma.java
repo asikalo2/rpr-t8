@@ -1,6 +1,9 @@
 package ba.etf.unsa.rpr.tutorijal08;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -21,6 +24,8 @@ public class NovaForma {
     public SimpleStringProperty grad;
     public SimpleStringProperty postanskiBroj;
 
+    PostanskiBrojValidator validator;
+    Thread th;
 
     public NovaForma() {
         ime = new SimpleStringProperty("");
@@ -28,6 +33,13 @@ public class NovaForma {
         adresa = new SimpleStringProperty("");
         grad = new SimpleStringProperty("");
         postanskiBroj = new SimpleStringProperty("");
+        validator = new PostanskiBrojValidator("");
+        th = new Thread(validator);
+
+        th.setDaemon(true);
+        th.setName("validator");
+
+
     }
 
     @FXML
@@ -37,6 +49,8 @@ public class NovaForma {
         adresaField.textProperty().bindBidirectional(adresa);
         gradField.textProperty().bindBidirectional(grad);
         brojField.textProperty().bindBidirectional(postanskiBroj);
+
+        dodajListenere();
     }
 
     private boolean provjeriPostanskiBroj(String broj) throws Exception {
@@ -53,24 +67,36 @@ public class NovaForma {
         System.out.println(sadrzaj);
         in.close();
 
+        if (sadrzaj.equals("OK")) {
+            System.out.println("vraca true");
+            return true;
+        }
         return false;
     }
 
     private void dodajListenere() {
-        brojField.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (!brojField.isFocused()) {
-                try {
-                    if (provjeriPostanskiBroj(brojField.getText())) {
-                        brojField.getStyleClass().removeAll("poljeNijeIspravno");
-                        brojField.getStyleClass().add("poljeIspravno");
-                    } else {
-                        brojField.getStyleClass().removeAll("poljeIspravno");
-                        brojField.getStyleClass().add("poljeNijeIspravno");
-                    }
-                } catch (Exception e) {
+        brojField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (aBoolean && !t1) {
+                    validator.setBroj(brojField.getText());
+                    th.start();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (!th.isAlive() && validator.getValidan()) {
+                                    brojField.getStyleClass().removeAll("poljeNijeIspravno");
+                                    brojField.getStyleClass().add("poljeIspravno");
+                                } else {
+                                    brojField.getStyleClass().removeAll("poljeIspravno");
+                                    brojField.getStyleClass().add("poljeNijeIspravno");
+                                }
+                            } catch (Exception e) {e.printStackTrace();}
+                        }
+                    });
                 }
             }
-
         });
     }
 }

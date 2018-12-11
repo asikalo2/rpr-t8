@@ -125,7 +125,11 @@ public class Controller {
     }
 
     public void prekiniPretragu(ActionEvent actionEvent) {
-        if (backgroundWorker.isAlive())
+        if (backgroundWorker.isAlive()) {
             backgroundWorker.interrupt();
+            traziBtn.setDisable(false);
+            traziStringField.setDisable(false);
+            prekiniBtn.setDisable(true);
+        }
     }
 }
