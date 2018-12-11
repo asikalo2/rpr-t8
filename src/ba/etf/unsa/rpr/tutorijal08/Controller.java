@@ -48,6 +48,14 @@ public class Controller {
         listaDatotekaField.itemsProperty().bindBidirectional(listaDatoteka);
         listaDatoteka.set(FXCollections.observableArrayList(rezultat));
         prekiniBtn.setDisable(true);
+
+        listaDatotekaField.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println(listaDatotekaField.getSelectionModel()
+                        .getSelectedItem());
+            }
+        });
     }
 
 
