@@ -14,7 +14,7 @@ public class PostanskiBrojValidator implements Runnable {
         validan = null;
     }
 
-    private boolean provjeriPostanskiBroj(String broj) throws Exception {
+    public boolean provjeriPostanskiBroj(String broj) throws Exception {
         // nadjeno na netu
         URL link = new URL("http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=" + broj);
         BufferedReader in = new BufferedReader(

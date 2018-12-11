@@ -1,9 +1,13 @@
 package ba.etf.unsa.rpr.tutorijal08;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -52,27 +56,33 @@ public class NovaForma {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 if (aBoolean && !t1) {
                     validator.setBroj(brojField.getText());
-                    Thread th = new Thread(validator);
-                    th.setDaemon(true);
-                    th.setName("validator");
-                    th.start();
 
-                    Platform.runLater(new Runnable() {
+                    Task<Boolean> task = new Task<Boolean>() {
                         @Override
-                        public void run() {
-                            try {
-                                th.join();
-                                if (validator.getValidan()) {
-                                    System.out.println("test 1");
-                                    brojField.getStyleClass().removeAll("poljeNijeIspravno");
-                                    brojField.getStyleClass().add("poljeIspravno");
-                                } else {
-                                    brojField.getStyleClass().removeAll("poljeIspravno");
-                                    brojField.getStyleClass().add("poljeNijeIspravno");
-                                }
-                            } catch (Exception e) {e.printStackTrace();}
+                        protected Boolean call() throws Exception {
+                            System.out.println("calling");
+                            return validator.provjeriPostanskiBroj(brojField.getText());
+                        }
+                    };
+
+                    task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                        @Override
+                        public void handle(WorkerStateEvent workerStateEvent) {
+                            Boolean value = task.getValue();
+                            System.out.println(value);
+                            if (value) {
+                                System.out.println("test 1");
+                                brojField.getStyleClass().removeAll("poljeNijeIspravno");
+                                brojField.getStyleClass().add("poljeIspravno");
+                            } else {
+                                brojField.getStyleClass().removeAll("poljeIspravno");
+                                brojField.getStyleClass().add("poljeNijeIspravno");
+                            }
                         }
                     });
+
+                    new Thread(task).start();
+
                 }
             }
         });
